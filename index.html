@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reflectie Moreel Burgerschap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: rustig, uitnodigend, serieus — een reflectiemoment, geen toets.
+   IDEA: een gevouwen reflectiekaart met vier vakken: denken, samenleven, handelen, participeren.
+   PICTURE: de route bovenaan — vier gekleurde dimensievelden die zich vullen terwijl je schrijft.
+   COLOUR and TYPE: wit en inkt; elke dimensie één eigen kleur. Source Serif 4 koppen, Inter tekst.
+   LAYOUT: één kolom, één stap per scherm, knoppen onderaan; op telefoon even rustig als op laptop. */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#12161b);--ink:light-dark(#17202a,#e8ecef);--mute:light-dark(#5b6670,#9aa5ae);
+--line:light-dark(#dde2e6,#2a323a);--field:light-dark(#f6f7f8,#1a2027);
+--d1:light-dark(#2f4aa8,#8ea3f0);--d2:light-dark(#b24a22,#f0a07c);--d3:light-dark(#17705f,#6fd0b9);--d4:light-dark(#8a6408,#e8c062);
+--base:light-dark(#17202a,#e8ecef);--acc:var(--base)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:720px;margin:0 auto;padding:clamp(20px,4vw,48px) max(5vw,16px) 120px}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--mute)}
+.rail{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;margin:14px 0 28px}
+.rail i{height:8px;border-radius:2px;background:var(--line);transition:background .3s}
+.rail i.on{background:var(--c,var(--base))}
+.rail i.cur{outline:2px solid var(--c,var(--base));outline-offset:2px}
+h1,h2{font-family:"Source Serif 4",Georgia,serif;font-weight:600;line-height:1.08;text-wrap:balance;margin:0 0 8px}
+h1{font-size:clamp(32px,5vw,44px)}h2{font-size:clamp(28px,4.4vw,38px);color:var(--acc)}
+.kicker{font-size:14px;font-weight:600;color:var(--acc);margin:0 0 6px}
+.lead{color:var(--mute);margin:0 0 28px;font-size:17px}
+.q{margin:0 0 28px}
+.q>label,.q>.lab{display:block;font-weight:600;margin-bottom:8px}
+.q .n{display:inline-block;min-width:1.8em;color:var(--acc)}
+.hint{font-weight:400;color:var(--mute);font-size:14px;display:block;margin-top:2px}
+input[type=text],input[type=date],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+textarea{min-height:110px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible,.opt input:focus-visible+span{outline:3px solid var(--acc);outline-offset:2px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt span{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:22px;cursor:pointer;background:var(--bg)}
+.opt input:checked+span{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.anders{margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:center}
+th:first-child,td:first-child{text-align:left}
+thead th{font-weight:500;color:var(--mute);font-size:13px}
+td input{width:22px;height:22px;accent-color:var(--acc);cursor:pointer;margin:0}
+td.r label{display:flex;justify-content:center;align-items:center;min-height:44px;cursor:pointer}td.r label span{display:none}
+.consent{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:8px;background:var(--field)}
+.consent input{width:24px;height:24px;flex:none;margin-top:2px;accent-color:var(--base)}
+.info{font-size:15px;color:var(--mute);border-left:3px solid var(--line);padding-left:14px;margin:0 0 24px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:12px max(5vw,16px)}
+.nav div{max-width:720px;margin:0 auto;display:flex;gap:12px;justify-content:space-between;align-items:center}
+button{font:inherit;font-weight:600;min-height:46px;padding:0 22px;border-radius:6px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer}
+button.pri{background:var(--ink);color:var(--bg)}
+button[disabled]{opacity:.4;cursor:default}
+.err{color:light-dark(#b3261e,#ffb4ab);font-size:14px;margin-top:6px}
+.review{border-top:1px solid var(--line)}
+.review section{padding:14px 0;border-bottom:1px solid var(--line)}
+.review h3{font-size:15px;margin:0 0 6px}
+.review p{margin:0 0 6px;font-size:15px}.review .empty{color:var(--mute);font-style:italic}
+.saved{font-size:13px;color:var(--mute)}
+.demo{background:var(--field);border:1px dashed var(--line);border-radius:8px;padding:16px;margin-top:24px;font-size:14px}
+pre{overflow-x:auto;background:var(--field);padding:12px;border-radius:6px;font-size:12.5px;white-space:pre-wrap;word-break:break-word}
+@media(max-width:600px){table,thead,tbody,tr,th,td{display:block}thead{display:none}tr{padding:10px 0;border-bottom:1px solid var(--line)}td{border:0;padding:4px 0;text-align:left}td.r{display:inline-block;margin-right:14px}td.r label{gap:6px;justify-content:flex-start}td.r label span{display:inline;font-size:14px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span>Werkvorm Moreel Burgerschap · reflectie</span><span id="stepLabel"></span></div>
+  <div class="rail" id="rail" aria-hidden="true"></div>
+  <form id="f" novalidate><div id="view"></div></form>
+</div>
+<nav class="nav"><div><button type="button" id="back">Terug</button><span class="saved" id="saved"></span><button type="button" class="pri" id="next">Volgende</button></div></nav>
+
+<script>
+{
+/* ======== INSTELLINGEN VOOR ONDERZOEKERS ========
+   ENDPOINT: de Web-app-URL van het Google Apps Script (zie HANDLEIDING).
+   Leeg laten = demomodus: er wordt niets verstuurd, je ziet wat onderzoekers zouden ontvangen. */
+const ENDPOINT = "";
+const PROJECT = "Moreel burgerschap – reflectie na werkvorm";
+
+const VALUES = ["Gelijkwaardigheid","Gelijkheid","Begrip voor anderen","Verdraagzaamheid","Afwijzen van onverdraagzaamheid","Vrijheid van meningsuiting","Autonomie","Afwijzen van discriminatie","Verantwoordelijkheidsbesef"];
+const ROLES = ["Persoon","Pedagoog/opvoeder","Vakexpert","Rolmodel","Burgerschapsvormer"];
+const SCALE = ["Niet","Beetje","Voldoende","Veel"];
+const EVAL = [["q16a_morele_vraagstukken","Herkennen van morele vraagstukken"],["q16b_waarden","Expliciteren van waarden"],["q16c_perspectieven","Onderzoeken van perspectieven"],["q16d_dilemmas","Analyseren van dilemma's"],["q16e_handelingsmogelijkheden","Ontwikkelen van handelingsmogelijkheden"],["q16f_rol_als_leraar","Reflecteren op mijn rol als leraar"]];
+
+const t = (id,n,label,hint) => ({type:"text",id,n,label,hint});
+const STEPS = [
+ {key:"start",c:"--base",title:"Fijn dat je even terugkijkt",lead:"Je hebt net een werkvorm over moreel burgerschap ervaren. Met deze reflectie help je ons de werkvorm te verbeteren en te begrijpen hoe je jezelf als leraar ontwikkelt. Het kost ongeveer 15 minuten.",items:[{type:"start"}]},
+ {key:"situatie",c:"--base",kicker:"Beschrijving van de situatie",title:"Welke situatie stond centraal?",items:[t("situatie","","Beschrijf kort de situatie of casus die tijdens de bijeenkomst centraal stond.")]},
+ {key:"d1",c:"--d1",kicker:"1 · Moreel denken — persoonlijke dimensie",title:"Waar sta ik voor, wie ben ik en wie wil ik zijn?",items:[
+   t("q01_moreel_vraagstuk","1","Wat maakt deze situatie volgens jou een moreel burgerschapsvraagstuk?"),
+   {type:"multi",id:"q02_waarden",n:"2",label:"Welke waarden of normen spelen volgens jou een belangrijke rol?",hint:"Kies er zoveel als je wilt.",opts:VALUES},
+   t("q03_persoonlijke_waarden","3","Welke van deze waarden zijn voor jou persoonlijk belangrijk?")]},
+ {key:"d2",c:"--d2",kicker:"2 · Moreel samenleven — sociale dimensie",title:"Wie ben ik in relatie tot anderen?",items:[
+   t("q04_perspectieven","4","Welke perspectieven van anderen heb je tijdens de bijeenkomst leren zien?"),
+   t("q05_verschillen","5","Welke verschillen in opvattingen kwamen naar voren?"),
+   {type:"one",id:"q06_denken_veranderd",n:"6",label:"Heeft een ander perspectief jouw eigen denken veranderd of verdiept?",opts:["Ja","Een beetje","Nee"]},
+   t("q06_toelichting","","Toelichting")]},
+ {key:"d3",c:"--d3",kicker:"3 · Moreel handelen — ethische dimensie",title:"Hoe vertaal ik waarden naar professioneel handelen?",items:[
+   t("q07_dilemma","7","Welke spanning of welk dilemma herken je in deze situatie?"),
+   t("q08_onderzochte_mogelijkheden","8","Welke handelingsmogelijkheden heb je onderzocht?"),
+   t("q09_keuze","9","Voor welke handelingsmogelijkheid zou jij kiezen?"),
+   t("q10_waarden_achter_keuze","10","Welke waarden liggen aan die keuze ten grondslag?")]},
+ {key:"d4",c:"--d4",kicker:"4 · Moreel participeren — maatschappelijke dimensie",title:"Hoe positioneer ik mij binnen school en samenleving?",items:[
+   t("q11_verantwoordelijkheid","11","Welke verantwoordelijkheid zie jij voor jezelf als toekomstig leraar in deze situatie?"),
+   t("q12_democratisch_inclusief","12","Hoe kan jouw handelen bijdragen aan democratisch en inclusief samenleven?"),
+   t("q13_maatschappelijke_betekenis","13","Welke maatschappelijke betekenis heeft deze situatie volgens jou?")]},
+ {key:"id",c:"--base",kicker:"Koppeling met professionele identiteit",title:"Wat voor leraar wil jij zijn?",items:[
+   {type:"multi",id:"q14_rollen",n:"14",label:"Welke rol(len) waren voor jou vooral zichtbaar tijdens het bespreken van deze situatie?",hint:"Kies er zoveel als je wilt.",opts:ROLES},
+   t("q15_soort_leraar","15","Wat zegt deze situatie over het soort leraar dat jij wilt zijn?")]},
+ {key:"eval",c:"--base",kicker:"Evaluatie van de werkvorm",title:"Wat heeft de werkvorm je gebracht?",items:[
+   {type:"matrix",n:"16",label:"In welke mate heeft de werkvorm jou geholpen bij:"},
+   t("q17_hielp_meest","17","Wat hielp jou het meest?"),
+   t("q18_verbeterpunten","18","Wat zou verbeterd kunnen worden?")]},
+ {key:"check",c:"--base",kicker:"Bijna klaar",title:"Kijk je antwoorden nog even na",items:[{type:"review"}]},
+ {key:"done",c:"--base",title:"Dank je wel!",items:[{type:"done"}]}
+];
+
+const params = new URLSearchParams(location.search);
+const DRAFT = "mb-reflectie-concept";
+let A = {datum:new Date().toISOString().slice(0,10), werkvorm:params.get("werkvorm")||"", opleiding:params.get("opleiding")||"", sessie:params.get("sessie")||""};
+try{ const d = JSON.parse(localStorage.getItem(DRAFT)||"null"); if(d) A = {...A,...d}; }catch(e){}
+let step = 0, sending = false, lastRecord = null;
+
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = id => document.getElementById(id);
+
+function field(it){
+  const head = `<span class="lab"><span class="n">${it.n||""}</span>${esc(it.label)}${it.hint?`<span class="hint">${esc(it.hint)}</span>`:""}</span>`;
+  if(it.type==="text") return `<div class="q"><label for="${it.id}"><span class="n">${it.n}</span>${esc(it.label)}</label><textarea id="${it.id}" name="${it.id}">${esc(A[it.id])}</textarea></div>`;
+  if(it.type==="multi"){ const sel = A[it.id]||[];
+    return `<fieldset class="q" style="border:0;padding:0">${head.replace('span class="lab"','legend class="lab"').replace(/<\/span>$/,"</legend>")}<div class="opts">${it.opts.map(o=>`<label class="opt"><input type="checkbox" data-multi="${it.id}" value="${esc(o)}" ${sel.includes(o)?"checked":""}><span>${esc(o)}</span></label>`).join("")}</div>
+    <input class="anders" type="text" id="${it.id}_anders" placeholder="Anders, namelijk…" value="${esc(A[it.id+"_anders"])}" aria-label="Anders, namelijk"></fieldset>`; }
+  if(it.type==="one") return `<fieldset class="q" style="border:0;padding:0"><legend class="lab"><span class="n">${it.n}</span>${esc(it.label)}</legend><div class="opts">${it.opts.map(o=>`<label class="opt"><input type="radio" name="${it.id}" value="${esc(o)}" ${A[it.id]===o?"checked":""}><span>${esc(o)}</span></label>`).join("")}</div></fieldset>`;
+  if(it.type==="matrix") return `<div class="q"><span class="lab"><span class="n">${it.n}</span>${esc(it.label)}</span><table><thead><tr><th></th>${SCALE.map(s=>`<th>${s}</th>`).join("")}</tr></thead><tbody>${EVAL.map(([k,l])=>`<tr><td>${esc(l)}</td>${SCALE.map(s=>`<td class="r"><label><input type="radio" name="${k}" value="${s}" aria-label="${esc(l)}: ${s}" ${A[k]===s?"checked":""}><span>${s}</span></label></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  if(it.type==="start") return `
+    <p class="info">Je antwoorden worden verwerkt met een deelnemerscode, niet met je naam. Ze worden alleen gebruikt voor onderzoek naar de werkvorm en worden vertrouwelijk bewaard door het onderzoeksteam. Deelname is vrijwillig; je kunt op elk moment stoppen zonder gevolgen voor je studie.</p>
+    <div class="q"><label for="deelnemer">Deelnemerscode <span class="hint">De code die je van je opleider hebt gekregen, of je studentnummer.</span></label><input type="text" id="deelnemer" autocomplete="off" value="${esc(A.deelnemer)}"><div class="err" id="e_deelnemer"></div></div>
+    <div class="q"><label for="opleiding">Opleiding</label><input type="text" id="opleiding" value="${esc(A.opleiding)}"></div>
+    <div class="q"><label for="werkvorm">Werkvorm / lesactiviteit</label><input type="text" id="werkvorm" value="${esc(A.werkvorm)}"></div>
+    <div class="q"><label for="datum">Datum</label><input type="date" id="datum" value="${esc(A.datum)}"></div>
+    <label class="consent"><input type="checkbox" id="toestemming" ${A.toestemming?"checked":""}><span>Ik heb de informatie gelezen en geef toestemming om mijn antwoorden te gebruiken voor dit onderzoek.</span></label><div class="err" id="e_toestemming"></div>`;
+  if(it.type==="review") return review();
+  if(it.type==="done") return done();
+  return "";
+}
+
+function review(){
+  const secs = STEPS.slice(1,8).map(s=>{
+    const rows = s.items.flatMap(it=>{
+      if(it.type==="matrix") return EVAL.map(([k,l])=>`<p>16 · ${esc(l)}: ${A[k]?esc(A[k]):'<span class="empty">niet ingevuld</span>'}</p>`);
+      const v = it.type==="multi" ? [...(A[it.id]||[]), A[it.id+"_anders"]].filter(Boolean).join(", ") : A[it.id];
+      return `<p><b>${it.n?it.n+" · ":""}</b>${v?esc(v):'<span class="empty">niet ingevuld</span>'}</p>`;
+    }).join("");
+    return `<section><h3>${esc(s.kicker)}</h3>${rows}</section>`;
+  }).join("");
+  const open = countEmpty();
+  return `<p class="lead">${open?`Je hebt ${open} vra${open===1?"ag":"gen"} nog niet ingevuld. Dat mag, maar elk antwoord helpt ons.`:"Alles is ingevuld."} Klik op Terug om iets aan te passen.</p><div class="review">${secs}</div><div class="err" id="sendErr"></div>`;
+}
+function done(){
+  const demo = !ENDPOINT;
+  return `<p class="lead">Je reflectie is ${demo?"klaar":"verstuurd naar het onderzoeksteam"}. Bedankt voor je tijd en je eerlijke antwoorden.</p>
+  <button type="button" id="again">Nieuwe reflectie invullen</button>
+  ${demo?`<div class="demo"><b>Demomodus — dit zien studenten niet.</b><br>Er is nog geen ENDPOINT ingesteld, dus er is niets verstuurd. Dit is de rij die onderzoekers in hun spreadsheet zouden ontvangen:<pre>${esc(JSON.stringify(lastRecord,null,2))}</pre><button type="button" id="copyRec">Kopieer als JSON</button> <span id="copyMsg" class="saved"></span></div>`:""}`;
+}
+
+function countEmpty(){
+  let n=0; STEPS.slice(1,8).forEach(s=>s.items.forEach(it=>{
+    if(it.type==="matrix") EVAL.forEach(([k])=>{ if(!A[k]) n++; });
+    else if(it.type==="multi"){ if(!(A[it.id]||[]).length && !A[it.id+"_anders"]) n++; }
+    else if(!A[it.id]) n++;
+  })); return n;
+}
+
+function collect(){
+  document.querySelectorAll("#view textarea, #view input[type=text], #view input[type=date]").forEach(el=>A[el.id]=el.value.trim());
+  const multis = new Set([...document.querySelectorAll("[data-multi]")].map(el=>el.dataset.multi));
+  multis.forEach(id=>A[id]=[...document.querySelectorAll(`[data-multi="${id}"]:checked`)].map(el=>el.value));
+  document.querySelectorAll("#view input[type=radio]:checked").forEach(el=>A[el.name]=el.value);
+  const c = $("toestemming"); if(c) A.toestemming = c.checked;
+  try{ localStorage.setItem(DRAFT, JSON.stringify(A)); $("saved").textContent="Concept bewaard op dit apparaat"; }catch(e){}
+}
+
+function record(){
+  const r = {ingezonden_op:new Date().toISOString(), project:PROJECT, sessie:A.sessie||"", deelnemer:A.deelnemer||"", opleiding:A.opleiding||"", werkvorm:A.werkvorm||"", datum:A.datum||"", toestemming:A.toestemming?"ja":"nee", situatie:A.situatie||""};
+  STEPS.slice(2,8).forEach(s=>s.items.forEach(it=>{
+    if(it.type==="matrix") EVAL.forEach(([k])=>r[k]=A[k]||"");
+    else if(it.type==="multi"){ r[it.id]=(A[it.id]||[]).join("; "); r[it.id+"_anders"]=A[it.id+"_anders"]||""; }
+    else r[it.id]=A[it.id]||"";
+  }));
+  return r;
+}
+
+async function send(){
+  const rec = record(); lastRecord = rec;
+  if(!ENDPOINT) return true;
+  const res = await fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(rec)});
+  const out = await res.json().catch(()=>({ok:res.ok}));
+  if(!out.ok) throw new Error(out.error||"Onbekende fout");
+  return true;
+}
+
+function render(){
+  const s = STEPS[step];
+  document.documentElement.style.setProperty("--acc",`var(${s.c})`);
+  $("rail").innerHTML = STEPS.slice(0,9).map((x,i)=>`<i class="${i<=step?"on":""} ${i===step?"cur":""}" style="--c:var(${x.c})"></i>`).join("");
+  $("stepLabel").textContent = step<9 ? `Stap ${step+1} van 9` : "";
+  $("view").innerHTML = `${s.kicker?`<p class="kicker">${esc(s.kicker)}</p>`:""}<h${step?2:1}>${esc(s.title)}</h${step?2:1}>${s.lead?`<p class="lead">${esc(s.lead)}</p>`:""}${s.items.map(field).join("")}`;
+  $("back").style.visibility = step>0 && s.key!=="done" ? "visible":"hidden";
+  $("next").style.visibility = s.key==="done" ? "hidden":"visible";
+  $("next").textContent = s.key==="check" ? "Versturen" : s.key==="start" ? "Beginnen" : "Volgende";
+  const again = $("again"); if(again) again.onclick = ()=>{ A={datum:new Date().toISOString().slice(0,10),werkvorm:A.werkvorm,opleiding:A.opleiding,sessie:A.sessie}; step=0; render(); };
+  const cp = $("copyRec"); if(cp) cp.onclick = ()=>navigator.clipboard.writeText(JSON.stringify(lastRecord,null,2)).then(()=>$("copyMsg").textContent="Gekopieerd").catch(()=>$("copyMsg").textContent="Kopiëren lukt hier niet; selecteer de tekst handmatig");
+  window.scrollTo({top:0});
+  const first = $("view").querySelector("textarea,input[type=text]"); if(first && step>0 && s.key!=="check") first.focus({preventScroll:true});
+}
+
+$("next").onclick = async ()=>{
+  collect();
+  const s = STEPS[step];
+  if(s.key==="start"){
+    $("e_deelnemer").textContent = A.deelnemer ? "" : "Vul je deelnemerscode in.";
+    $("e_toestemming").textContent = A.toestemming ? "" : "Zonder toestemming kunnen we je antwoorden niet gebruiken.";
+    if(!A.deelnemer || !A.toestemming) return;
+  }
+  if(s.key==="check"){
+    if(sending) return; sending=true; $("next").disabled=true; $("next").textContent="Bezig met versturen…";
+    try{ await send(); try{localStorage.removeItem(DRAFT);}catch(e){} $("saved").textContent=""; }
+    catch(e){ sending=false; $("next").disabled=false; $("next").textContent="Opnieuw proberen";
+      $("sendErr").textContent = "Versturen is niet gelukt ("+e.message+"). Je antwoorden zijn bewaard op dit apparaat; probeer het zo opnieuw of meld het bij je opleider."; return; }
+    sending=false; $("next").disabled=false;
+  }
+  step++; render();
+};
+$("back").onclick = ()=>{ collect(); step=Math.max(0,step-1); render(); };
+$("f").addEventListener("submit",e=>e.preventDefault());
+$("f").addEventListener("change",collect);
+render();
+}
+</script>
+</body>
+</html>
